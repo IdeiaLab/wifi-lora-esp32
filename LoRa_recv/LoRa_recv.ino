@@ -1,8 +1,10 @@
+// Bibliotecas para LoRa
 #include <SPI.h>
 #include <LoRa.h>
 
+
+// Bibliotecas para o display
 #include <Wire.h>
-#include <Adafruit_MQTT.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
@@ -16,7 +18,7 @@
 //433E6 for Asia
 //866E6 for Europe
 //915E6 for North America
-#define BAND 866E6
+#define BAND 915E6
 
 #define OLED_SDA 4
 #define OLED_SCL 15
@@ -31,9 +33,11 @@ bool noAguardo = false;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
 
+  // Reset do display OLED via software
   pinMode(OLED_RST, OUTPUT);
   digitalWrite(OLED_RST, LOW);
   delay(20);
@@ -41,7 +45,10 @@ void setup() {
 
   Wire.begin(OLED_SDA, OLED_SCL);
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false)) {
+  int intialized = display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false);
+
+  if (not intialized) 
+  {
     Serial.println(F("SSD1306 allocation failed!"));
     while (true);
   }
@@ -58,7 +65,10 @@ void setup() {
   SPI.begin(SCK, MISO, MOSI, DIO0);
   LoRa.setPins(SS, RST, DIO0);
 
-  if (!LoRa.begin(BAND)) {
+  intialized = LoRa.begin(BAND);
+
+  if (not intialized) 
+  {
     Serial.println("Starting LoRa Failed");
     while (true);
   }
@@ -78,11 +88,14 @@ void setup() {
 void loop() 
 {
   int packetSize = LoRa.parsePacket();
-  if (packetSize) {
+
+  if (packetSize) 
+  {
     Serial.print("Recebeu pacote ");
     noAguardo = false; 
 
-    while (LoRa.available()) {
+    while (LoRa.available()) 
+    {
       LoRaData = LoRa.readString();
       Serial.print(LoRaData);
     }
@@ -93,27 +106,22 @@ void loop()
 
     display.clearDisplay();
     display.setCursor(0, 0);
-    display.print("Receptor LoRa");
-    display.setCursor(0, 20);
-    display.print("Pacote recebido!");
-    display.setCursor(0, 30);
-    display.print(LoRaData);
-    display.setCursor(0, 40);
+    display.println("Receptor LoRa\n");
+    
+    display.println("Pacote recebido!");
+    
+    display.println(LoRaData);
     display.print("RSSI ");
-    display.setCursor(30, 40);
     display.println(rssi);
-    display.setCursor(0, 50);
-    display.print("Latencia:");
-    display.print(millis() - tempoUltimoPacote);
-    display.print("ms");
+    
+    display.println();
 
-    // display.print("Tamanho:");
-    // display.println(packetSize);
+    display.print("Latencia: ");
+    display.print(millis() - tempoUltimoPacote);
+    display.println("ms");
 
     display.display();
     tempoUltimoPacote = millis();
-    
-    return;
   }
 
   if(millis() - tempoUltimoPacote > 2500UL and not noAguardo)
