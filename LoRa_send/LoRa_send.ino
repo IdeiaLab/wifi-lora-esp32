@@ -203,7 +203,7 @@ void showInformation()
   display.print("Tempo corrido:");
   display.println(getCurrentTime());
 
-  display.print("Proximo pacote:");
+  display.print("\nProximo pacote:");
   display.print(timeUntilNext);
   display.println("ms");
   
