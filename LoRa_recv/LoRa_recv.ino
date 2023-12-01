@@ -109,11 +109,13 @@ void loop()
     // Desativa o estado de espera
     waiting = false; 
 
+    // Reseta a variável receivedData
     receivedData = "";
 
     // Lê e grava a string recebida
     while (LoRa.available()) 
     {
+      // Adiciona cada linha à variável receivedData
       receivedData += LoRa.readString();
       Serial.print(receivedData);
     }
