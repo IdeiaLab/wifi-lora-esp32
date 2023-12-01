@@ -8,6 +8,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+// Definição dos pinos para a esp32
 #define SCK 5
 #define MISO 19
 #define MOSI 27
@@ -20,16 +21,23 @@
 //915E6 for North America
 #define BAND 915E6
 
+// Definição do OLED
 #define OLED_SDA 4
 #define OLED_SCL 15
 #define OLED_RST 16
 
-#define SCREEN_WIDTH 128  // OLED display width, in pixels
-#define SCREEN_HEIGHT 64  // OLED display height, in pixels
+// Altura e largura do display OLED, em pixels
+#define SCREEN_WIDTH 128  
+#define SCREEN_HEIGHT 64  
 
-String LoRaData;
-unsigned long tempoUltimoPacote = -1;
-bool noAguardo = false;
+// String que armazena o que foi recebido pelo emissor LoRa
+String receivedData;
+
+// Essa variável marca o momento da execução em que um pacote foi
+// recebido pela última vez
+u_long lastPacketTime = -1;
+
+bool waiting = false;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
 
@@ -45,6 +53,7 @@ void setup()
 
   Wire.begin(OLED_SDA, OLED_SCL);
 
+  // Inicialização do display
   int intialized = display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false);
 
   if (not intialized) 
@@ -53,6 +62,7 @@ void setup()
     while (true);
   }
 
+  // Preparação do display
   display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(1);
@@ -62,6 +72,7 @@ void setup()
 
   Serial.println("Teste de recebimento LoRa");
 
+  // Inicialização LoRa
   SPI.begin(SCK, MISO, MOSI, DIO0);
   LoRa.setPins(SS, RST, DIO0);
 
@@ -73,6 +84,7 @@ void setup()
     while (true);
   }
 
+  // Mostra a tela de splash IdeiaLab
   display.clearDisplay();
   display.setTextSize(3);
   display.setCursor(0, 10);
@@ -87,51 +99,76 @@ void setup()
 
 void loop() 
 {
+  // Guarda o tamanho do pacote, 0 se não houver
   int packetSize = LoRa.parsePacket();
 
-  if (packetSize) 
+  if(packetSize > 0) 
   {
     Serial.print("Recebeu pacote ");
-    noAguardo = false; 
 
+    // Desativa o estado de espera
+    waiting = false; 
+
+    receivedData = "";
+
+    // Lê e grava a string recebida
     while (LoRa.available()) 
     {
-      LoRaData = LoRa.readString();
-      Serial.print(LoRaData);
+      receivedData += LoRa.readString();
+      Serial.print(receivedData);
     }
 
+    // Guarda o valor RSSI: Received Signal Strength Indicator.
+    // É a força do sinal, quanto maior, melhor
     int rssi = LoRa.rssi();
+    
     Serial.print(" com RSSI ");
     Serial.println(rssi);
 
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.println("Receptor LoRa\n");
+    // Desenha as informações na tela
+    drawScreen(receivedData, rssi, lastPacketTime);
     
-    display.println("Pacote recebido!");
-    
-    display.println(LoRaData);
-    display.print("RSSI ");
-    display.println(rssi);
-    
-    display.println();
-
-    display.print("Latencia: ");
-    display.print(millis() - tempoUltimoPacote);
-    display.println("ms");
-
-    display.display();
-    tempoUltimoPacote = millis();
+    // Marca o momento em que esse pacote foi recebido
+    lastPacketTime = millis();
   }
 
-  if(millis() - tempoUltimoPacote > 2500UL and not noAguardo)
+  // Guarda o tempo decorrido entre o recebimento do último pacote e agora
+  u_long timeSinceLastPacket = millis() - lastPacketTime;
+
+  // Mostra uma tela diferente se o tempo desde o último pacote for maior
+  // que 2,5 segundos (2500 milissegundos) e não estiver em estado de espera
+  if(timeSinceLastPacket > 2500UL and not waiting)
   {
     display.clearDisplay();
     display.setCursor(0, 0);
     display.println("Ultimo pacote:");
-    display.println(LoRaData);
+    display.println(receivedData);
     display.print("Aguardando novo\npacote...");
     display.display();
-    noAguardo = true;
+
+    // Reativa o estado de espera, ou seja, esta tela é impressa apenas uma vez
+    // até o próximo estado de espera
+    waiting = true;
   }
+}
+
+void drawScreen(String receivedData, int rssi, u_long lastPacketTime)
+{
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println("Receptor LoRa\n");
+
+  display.println("Pacote recebido!");
+
+  display.println(receivedData);
+  display.print("RSSI ");
+  display.println(rssi);
+
+  display.println();
+
+  display.print("Latencia: ");
+  display.print(millis() - lastPacketTime);
+  display.println("ms");
+
+  display.display();
 }

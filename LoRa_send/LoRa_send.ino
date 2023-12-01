@@ -64,7 +64,8 @@ constexpr auto PACKAGE = "IdeiaLab -> "; // Pacote a ser enviado
 Adafruit_SSD1306 display = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST); 
 
 // Contador de pacotes enviados
-uint8_t counter = 0;  
+// int16 sem sinal (0 a 2^16 - 1) 
+uint16_t counter = 0;
 
 // u_long é o tipo long (int32) sem sinal (0 a 2^32 - 1)
 u_long initTime, lastPackageTime = 0, currentDelay = 0;
