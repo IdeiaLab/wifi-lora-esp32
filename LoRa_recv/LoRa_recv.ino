@@ -139,12 +139,7 @@ void loop()
   // que 2,5 segundos (2500 milissegundos) e não estiver em estado de espera
   if(timeSinceLastPacket > 2500UL and not waiting)
   {
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.println("Ultimo pacote:");
-    display.println(receivedData);
-    display.print("Aguardando novo\npacote...");
-    display.display();
+    drawWaitingScreen(receivedData);
 
     // Reativa o estado de espera, ou seja, esta tela é impressa apenas uma vez
     // até o próximo estado de espera
@@ -152,6 +147,7 @@ void loop()
   }
 }
 
+/// Essa função desenha no display uma tela com informações sobre o último pacote recebido
 void drawScreen(String receivedData, int rssi, u_long lastPacketTime)
 {
   display.clearDisplay();
@@ -171,4 +167,18 @@ void drawScreen(String receivedData, int rssi, u_long lastPacketTime)
   display.println("ms");
 
   display.display();
+}
+
+/// Essa função desenha no display a tela de espera por novos pacotes
+void drawWaitingScreen(String receivedData)
+{
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    
+    display.println("Ultimo pacote:");
+    display.println(receivedData);
+
+    display.print("Aguardando novo\npacote...");
+
+    display.display();
 }
