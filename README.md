@@ -4,7 +4,7 @@
   Na pasta LoRa_send se encontram 3 arquivos: "LoRa-send.ino", "RandomDelay.hpp" e "RandomDelay.cpp". <br/>
   <ul>
     <li>RandomDelay.hpp</li>
-    Este arquivo contém a declaração da classe RandomDelay que contém o método estático randomDelay, que retorna um número
+    Este arquivo contém a declaração do namespace RandomDelay que contém a função randomDelay, que retorna um número
     aleatório dados os limites inferior e superior.
   </ul>
 </div>
