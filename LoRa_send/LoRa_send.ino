@@ -17,9 +17,6 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 
-// Biblioteca MQTT
-#include "CayenneMQTTESP32.h"
-
 // Biblioteca que gera um atraso aleatório
 #include "RandomDelay.hpp"
 
@@ -45,15 +42,8 @@
 #define SCREEN_HEIGHT 64  // Altura do display OLED, em pixels
 
 // Nome e senha do Wi-Fi
-#define WLAN_SSID "GEFIE"
-#define WLAN_PASS "@F4bul0s0@$"
-
-// Cayenne MQTT setup
-#define CLIENT_ID "f6a1e3e0-2baf-11ee-8485-5b7d3ef089d0"
-#define MQTT_USER "975475b0-2baf-11ee-9ab8-d511caccfe8c"
-#define MQTT_PASS "9d2933bbc762e39dd8ef8de17b828ffbb82ece97"
-#define MQTT_PORT 1883
-#define MQTT_SERVER "mqtt.mydevices.com"
+#define WLAN_SSID "SSID_WIFI"
+#define WLAN_PASS "SENHA_WIFI"
 
 // Definição do pacote
 constexpr u_long PACKAGE_LOWER_DELAY_LIMIT = 500;  // Mínimo de atraso, em milissegundos, entre pacotes
@@ -75,7 +65,7 @@ void setup()
   // Inicializa monitor serial
   Serial.begin(115200);
 
-  // Variável booleana que receberá o retorno das inicializações
+  // Variável inteira que receberá o retorno das inicializações
   int initialized;
 
   // Reset do display OLED via software
@@ -124,9 +114,6 @@ void setup()
     while(true);
   }
 
-  // Inicializa MQTT 
-  // Cayenne.begin(MQTT_USER, MQTT_PASS, CLIENT_ID, WLAN_SSID, WLAN_PASS); 
-
   // Mostra texto splash do IdeiaLab
   display.clearDisplay();
   display.setTextSize(3);
@@ -172,16 +159,7 @@ void loop()
   // Enviando o pacote definido concatenado ao tempo atual
   LoRa.print(loraPacket + " " + getCurrentTime());
   LoRa.endPacket();
-
-  // Chama CAYENNE_OUT_DEFAULT() e CAYENNE_IN_DEFAULT()
-  // Cayenne.loop(); 
 }
-
-CAYENNE_OUT_DEFAULT() 
-{ }
-
-CAYENNE_IN_DEFAULT()
-{ }
 
 /// Mostra no display informações a respeito do enviador
 void showInformation() 
