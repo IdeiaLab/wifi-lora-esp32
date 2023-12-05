@@ -2,11 +2,7 @@
 
 #include <sys/types.h>
 
-class RandomDelay
+namespace RandomDelay
 {
-public:
-  static u_long randomDelay(u_long lowerLimit, u_long upperLimit);
-
-private:
-  RandomDelay() { }
-};
+  u_long randomDelay(u_long lowerLimit, u_long upperLimit);
+}

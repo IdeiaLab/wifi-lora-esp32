@@ -65,6 +65,8 @@ void setup()
   // Inicializa monitor serial
   Serial.begin(115200);
 
+  randomSeed(analogRead(A0));
+
   // Variável inteira que receberá o retorno das inicializações
   int initialized;
 
@@ -145,13 +147,14 @@ void loop()
   
   // Gera-se um tempo de atraso pseudo-aleatório, dado os limites inferior e superior;
   currentDelay = RandomDelay::randomDelay(PACKAGE_LOWER_DELAY_LIMIT, PACKAGE_UPPER_DELAY_LIMIT);
+  
   // O ponto no tempo de envio passa a ser o tempo atual
   lastPackageTime = currentTime;
 
   // Define-se parte do pacote a ser enviado, a constante PACKAGE
   // concatenada ao valor de string da variável counter
   String loraPacket = PACKAGE + String(counter);
-
+  
   counter++;
 
   // Por fim, o envio do pacote

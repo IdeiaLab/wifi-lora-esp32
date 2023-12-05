@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <time.h>
 #include <Arduino.h>
 
 #include "RandomDelay.hpp"
@@ -8,5 +9,5 @@
 u_long RandomDelay::randomDelay(u_long lowerLimit=0, u_long upperLimit=1000)
 {
   u_long range = upperLimit - lowerLimit;
-  return (rand() % range) + lowerLimit;
+  return random(range) + lowerLimit;
 }
