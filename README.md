@@ -8,13 +8,11 @@
         Este arquivo contém a declaração do namespace RandomDelay que contém a função randomDelay, que retorna um 
         número aleatório dados os limites inferior e superior.
       </dd>
-
       <dt>RandomDelay.cpp</dt>
       <dd>
         Este arquivo contémm a definição da função randomDelay, apesar de muito simples, serve como exemplo de 
         como implementar código C++ puro a qualquer projeto Arduino.
       </dd>
-
       <dt>LoRa-send.ino</dt>
       <dd>
         Esse é o arquivo mais importante da pasta, claro. O _sketch_ traz consigo, por exemplo, inicialização 
