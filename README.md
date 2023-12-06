@@ -17,6 +17,7 @@
       <li>AdafruitGFX</li>
       <li>SPI</li>
     </ul>
+    <a href='https://RandomNerdTutorials.com/ttgo-lora32-sx1276-arduino-ide/'>CÓDIGO BASE</a>
   </div>
   <hr/>
 <h3>Emissor</h3>
