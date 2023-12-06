@@ -1,5 +1,24 @@
 # Emissão e recepção de pacotes LoRa
-
+### Informações
+  <div align='left'>
+    Ferramentas utilizadas: 
+    <ul>
+      <li>Arduino IDE</li>
+      <li>Arduino C</li>
+      <li>C++</li>
+    </ul>
+    Placa utilizada: 
+    <ul><li>Heltec Wifi Lora 32 V2</li></ul>
+    Bibliotecas: 
+    <ul>
+      <li>EspLoRa</li>
+      <li>Wi-Fi</li>
+      <li>AdafruitSSD3306</li>
+      <li>AdafruitGFX</li>
+      <li>SPI</li>
+    </ul>
+  </div>
+  <hr/>
 <h3>Emissor</h3>
 <div align='left'>
   Na pasta LoRa_send, módulo de envio, se encontram 3 arquivos: "LoRa_send.ino", "RandomDelay.hpp" e "RandomDelay.cpp". <br/>
@@ -28,7 +47,7 @@
     <img src='https://github.com/IdeiaLab/wifi-lora-esp32/assets/121146950/fed75b09-6dcd-4acf-a47e-1e6ec7b025ac'
      alt='Emissor LoRa enviando pacote' style="width:45vw;"/>
 </div>
-
+<hr/>
 <!-- ![esp-lora-enviador](https://github.com/IdeiaLab/wifi-lora-esp32/assets/121146950/fed75b09-6dcd-4acf-a47e-1e6ec7b025ac "Emissor LoRa") -->
 
 <h3>Receptor</h3>
